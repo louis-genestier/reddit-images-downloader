@@ -211,9 +211,27 @@ func init() {
 }
 
 func main() {
-	var p Posts
 	url := fmt.Sprintf("https://www.reddit.com/r/%s/top/.json?t=%s&limit=%d", sub, period, limit)
+	GetImages(url)
+}
 
+// GetImages is the main function
+func GetImages(url string) {
+	posts := getPosts(url)
+
+	for _, post := range posts.Data.Children {
+		if len(post.Data.Preview.Images) >= 1 {
+			wg.Add(1)
+			imageUrl := strings.ReplaceAll(post.Data.Preview.Images[0].Source.URL, "amp;", "")
+			go downloadImage(imageUrl, post.Data.Subreddit, post.Data.Title)
+		}
+	}
+
+	wg.Wait()
+}
+
+// getPosts send the GET request in order to get posts and returns them
+func getPosts(url string) (p Posts) {
 	body := getResponse(url)
 	defer body.Close()
 
@@ -223,15 +241,7 @@ func main() {
 		log.Fatalln("can't convert json to struct: ", err.Error())
 	}
 
-	for _, post := range p.Data.Children {
-		if len(post.Data.Preview.Images) >= 1 {
-			wg.Add(1)
-			imageUrl := strings.ReplaceAll(post.Data.Preview.Images[0].Source.URL, "amp;", "")
-			go downloadImage(imageUrl, post.Data.Subreddit, post.Data.Title)
-		}
-	}
-
-	wg.Wait()
+	return p
 }
 
 // downloadImage is used to download an image from a give imageUrl
