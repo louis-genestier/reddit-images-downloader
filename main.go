@@ -197,6 +197,8 @@ type Posts struct {
 
 // sub set the subreddit
 var sub string
+// period is used to get posts within a period time (hour, day, week, month, year, all)
+var period string
 // limit set the max number of posts (100 maximum)
 var limit int
 var wg sync.WaitGroup
@@ -204,12 +206,13 @@ var wg sync.WaitGroup
 func init() {
 	flag.StringVar(&sub, "s", "all", "name of the subreddit to get images from")
 	flag.IntVar(&limit, "l", 100, "number of posts to get")
+	flag.StringVar(&period, "p", "all", "period of time to get posts from (hour, day, week, month, year or all)")
 	flag.Parse()
 }
 
 func main() {
 	var p Posts
-	url := fmt.Sprintf("https://www.reddit.com/r/%s/top/.json?t=all&limit=%d", sub, limit)
+	url := fmt.Sprintf("https://www.reddit.com/r/%s/top/.json?t=%s&limit=%d", sub, period, limit)
 
 	body := getResponse(url)
 	defer body.Close()

@@ -1,6 +1,6 @@
 # Reddit Images Downloader
 
-Reddit Images Download is a program that allow users to download images from the top of all time in a given subreddit.
+Reddit Images Download is a program that allow users to download images from the top of a selected period in a given subreddit.
 
 ## Usage
 You can set the subreddit with `-s` and the number of posts to get with `-l`.
@@ -8,13 +8,15 @@ You can set the subreddit with `-s` and the number of posts to get with `-l`.
 ./reddit-images-downloader --help
 Usage of ./reddit-images-downloader:
   -l int
-        number of posts to get (default 100)
+          number of posts to get (default 100)
+  -p string
+          period of time to get posts from (hour, day, week, month, year or all) (default "all")
   -s string
-        name of the subreddit to get images from (default "all")
+          name of the subreddit to get images from (default "all")
 ```
 
 ```shell script
-./reddit-images-downloader -s GlobalOffensive -l 3
+./reddit-images-downloader -s GlobalOffensive -l 3 -p all
 Image from post FaZe Clan vs Cloud9 / ELEAGUE Major Boston 2018 - Grand-Final / Post-Match Discussion on /r/GlobalOffensive downloaded.
 Image from post Man speaks the truth. on /r/GlobalOffensive downloaded.
 Image from post On Anubis the sprayed B sign is older than the ancient hieroglyphs. on /r/GlobalOffensive downloaded.
